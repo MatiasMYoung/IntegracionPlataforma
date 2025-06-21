@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Usuarios registrados</h2>
+    <table class="table table-bordered table-hover mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Email</th>
+                <th>Administrador</th>
+                <th>Fecha de registro</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+            <tr>
+                <td>{{ usuario.id }}</td>
+                <td>{{ usuario.username }}</td>
+                <td>{{ usuario.email }}</td>
+                <td>{% if usuario.is_admin %}Sí{% else %}No{% endif %}</td>
+                <td>{{ usuario.created_at.strftime('%d-%m-%Y') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2 class="mt-5">Reservas del sistema</h2>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Vehículo/Maquinaria</th>
+                <th>Fecha inicio</th>
+                <th>Fecha fin</th>
+                <th>Precio total</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reserva in reservas %}
+            <tr>
+                <td>{{ reserva.id }}</td>
+                <td>{{ reserva.user.username }}</td>
+                <td>{{ reserva.vehicle.name }} {{ reserva.vehicle.model }}</td>
+                <td>{{ reserva.start_date.strftime('%d-%m-%Y') }}</td>
+                <td>{{ reserva.end_date.strftime('%d-%m-%Y') }}</td>
+                <td>{{ reserva.total_price }}</td>
+                <td>{{ reserva.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %} 

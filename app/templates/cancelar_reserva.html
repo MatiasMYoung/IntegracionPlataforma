@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Cancelar Reserva{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Cancelar Reserva</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-info-circle"></i> 
+                        <strong>Advertencia:</strong> Esta acción cancelará la reserva y enviará una notificación al usuario.
+                    </div>
+
+                    <h5>Detalles de la Reserva</h5>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p><strong>ID de Reserva:</strong> #{{ reserva.id }}</p>
+                            <p><strong>Usuario:</strong> {{ reserva.user.username }}</p>
+                            <p><strong>Vehículo:</strong> {{ reserva.vehicle.name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Fecha Inicio:</strong> {{ reserva.start_date.strftime('%d/%m/%Y %H:%M') }}</p>
+                            <p><strong>Fecha Fin:</strong> {{ reserva.end_date.strftime('%d/%m/%Y %H:%M') }}</p>
+                            <p><strong>Precio Total:</strong> {{ format_currency(reserva.total_price) }}</p>
+                        </div>
+                    </div>
+
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="motivo" class="form-label">
+                                <strong>Motivo de Cancelación *</strong>
+                            </label>
+                            <textarea class="form-control" id="motivo" name="motivo" rows="4" 
+                                      placeholder="Especifique el motivo de la cancelación..." required></textarea>
+                            <div class="form-text">
+                                Este motivo será enviado al usuario en la notificación de cancelación.
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('main.admin_reservas') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Volver
+                            </a>
+                            <button type="submit" class="btn btn-danger" 
+                                    onclick="return confirm('¿Está seguro de que desea cancelar esta reserva?')">
+                                <i class="fas fa-times"></i> Confirmar Cancelación
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

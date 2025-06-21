@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Vehículos{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Vehículos Disponibles</h1>
+
+<div class="row">
+    {% for vehicle in vehicles %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <img src="{{ url_for('static', filename='img/' ~ vehicle.image_url) }}" 
+                 class="card-img-top" alt="{{ vehicle.name }}" style="height: 200px; object-fit: cover;">
+            <div class="card-body">
+                <h5 class="card-title">{{ vehicle.name }} {{ vehicle.model }}</h5>
+                <p class="card-text">
+                    <strong>Año:</strong> {{ vehicle.year }}<br>
+                    <strong>Eficiencia:</strong> {{ vehicle.fuel_efficiency }} km/l<br>
+                    <strong>Precio:</strong> {{ format_currency(vehicle.price_per_day) }}<br>
+                    {{ format_currency(convert_to_uf(vehicle.price_per_day), 'UF') }}<br>
+                    {{ format_currency(convert_to_usd(vehicle.price_per_day), 'USD') }}
+                </p>
+                <p class="card-text">{{ vehicle.description }}</p>
+            </div>
+            <div class="card-footer">
+                {% if current_user.is_authenticated %}
+                    <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#rentModal{{ vehicle.id }}">
+                        Reservar Ahora
+                    </button>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-secondary w-100">
+                        Inicia sesión para reservar
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para reserva -->
+    <div class="modal fade" id="rentModal{{ vehicle.id }}" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Reservar {{ vehicle.name }} {{ vehicle.model }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST" action="{{ url_for('main.reservar_vehiculo', vehicle_id=vehicle.id) }}">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Fecha de Inicio</label>
+                            <input type="date" name="start_date" class="form-control" required min="{{ today }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Fecha de Fin</label>
+                            <input type="date" name="end_date" class="form-control" required min="{{ today }}">
+                        </div>
+                        <div class="alert alert-info">
+                            <strong>Precio por día:</strong> {{ format_currency(vehicle.price_per_day) }}<br>
+                            <strong>Total estimado:</strong> <span id="totalPrice{{ vehicle.id }}">-</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Confirmar Reserva</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Calcular precio total cuando cambien las fechas
+    const modals = document.querySelectorAll('[id^="rentModal"]');
+    modals.forEach(function(modal) {
+        const startDate = modal.querySelector('input[name="start_date"]');
+        const endDate = modal.querySelector('input[name="end_date"]');
+        const totalPrice = modal.querySelector('[id^="totalPrice"]');
+        
+        function calculateTotal() {
+            if (startDate.value && endDate.value) {
+                const start = new Date(startDate.value);
+                const end = new Date(endDate.value);
+                const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+                if (days > 0) {
+                    // Obtener el precio del vehículo desde el modal
+                    const priceText = modal.querySelector('.alert-info strong').nextSibling.textContent;
+                    const price = parseFloat(priceText.replace(/[^\d]/g, ''));
+                    const total = days * price;
+                    totalPrice.textContent = new Intl.NumberFormat('es-CL', {
+                        style: 'currency',
+                        currency: 'CLP'
+                    }).format(total);
+                }
+            }
+        }
+        
+        startDate.addEventListener('change', calculateTotal);
+        endDate.addEventListener('change', calculateTotal);
+    });
+});
+</script>
+{% endblock %} 

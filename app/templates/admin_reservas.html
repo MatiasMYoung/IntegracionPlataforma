@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Administrar Reservas{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-calendar-check"></i> Administrar Reservas</h2>
+                <a href="{{ url_for('main.admin') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver al Panel
+                </a>
+            </div>
+
+            {% if reservas %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Todas las Reservas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Usuario</th>
+                                    <th>Vehículo</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Precio Total</th>
+                                    <th>Estado</th>
+                                    <th>Fecha Creación</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for reserva in reservas %}
+                                <tr>
+                                    <td>#{{ reserva.id }}</td>
+                                    <td>{{ reserva.user.username }}</td>
+                                    <td>{{ reserva.vehicle.name }}</td>
+                                    <td>{{ reserva.start_date.strftime('%d/%m/%Y %H:%M') }}</td>
+                                    <td>{{ reserva.end_date.strftime('%d/%m/%Y %H:%M') }}</td>
+                                    <td>{{ format_currency(reserva.total_price) }}</td>
+                                    <td>
+                                        {% if reserva.status == 'pending' %}
+                                            <span class="badge bg-warning">Pendiente</span>
+                                        {% elif reserva.status == 'confirmed' %}
+                                            <span class="badge bg-primary">Confirmada</span>
+                                        {% elif reserva.status == 'in_progress' %}
+                                            <span class="badge bg-info">En Curso</span>
+                                        {% elif reserva.status == 'cancelled' %}
+                                            <span class="badge bg-danger">Cancelada</span>
+                                        {% elif reserva.status == 'completed' %}
+                                            <span class="badge bg-success">Completada</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ reserva.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                                    <td>
+                                        {% if reserva.status == 'pending' %}
+                                            <form method="POST" action="{{ url_for('main.confirmar_reserva', reservation_id=reserva.id) }}" style="display: inline;">
+                                                <button type="submit" class="btn btn-sm btn-primary" onclick="return confirm('¿Confirmar esta reserva?')">
+                                                    <i class="fas fa-check"></i> Confirmar
+                                                </button>
+                                            </form>
+                                            <form method="POST" action="{{ url_for('main.iniciar_reserva', reservation_id=reserva.id) }}" style="display: inline;">
+                                                <button type="submit" class="btn btn-sm btn-info" onclick="return confirm('¿Iniciar el uso del vehículo?')">
+                                                    <i class="fas fa-play"></i> Iniciar
+                                                </button>
+                                            </form>
+                                            <a href="{{ url_for('main.cancelar_reserva', reservation_id=reserva.id) }}" 
+                                               class="btn btn-sm btn-danger" 
+                                               onclick="return confirm('¿Está seguro de que desea cancelar esta reserva?')">
+                                                <i class="fas fa-times"></i> Cancelar
+                                            </a>
+                                        {% elif reserva.status == 'confirmed' %}
+                                            <form method="POST" action="{{ url_for('main.iniciar_reserva', reservation_id=reserva.id) }}" style="display: inline;">
+                                                <button type="submit" class="btn btn-sm btn-info" onclick="return confirm('¿Iniciar el uso del vehículo?')">
+                                                    <i class="fas fa-play"></i> Iniciar
+                                                </button>
+                                            </form>
+                                            <a href="{{ url_for('main.cancelar_reserva', reservation_id=reserva.id) }}" 
+                                               class="btn btn-sm btn-danger" 
+                                               onclick="return confirm('¿Está seguro de que desea cancelar esta reserva?')">
+                                                <i class="fas fa-times"></i> Cancelar
+                                            </a>
+                                        {% elif reserva.status == 'in_progress' %}
+                                            <form method="POST" action="{{ url_for('main.completar_reserva', reservation_id=reserva.id) }}" style="display: inline;">
+                                                <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('¿Completar esta reserva?')">
+                                                    <i class="fas fa-flag-checkered"></i> Completar
+                                                </button>
+                                            </form>
+                                            <a href="{{ url_for('main.cancelar_reserva', reservation_id=reserva.id) }}" 
+                                               class="btn btn-sm btn-danger" 
+                                               onclick="return confirm('¿Está seguro de que desea cancelar esta reserva?')">
+                                                <i class="fas fa-times"></i> Cancelar
+                                            </a>
+                                        {% elif reserva.status == 'cancelled' %}
+                                            <span class="text-muted">Cancelada</span>
+                                            {% if reserva.cancellation_reason %}
+                                                <br><small class="text-muted">Motivo: {{ reserva.cancellation_reason[:50] }}...</small>
+                                            {% endif %}
+                                        {% elif reserva.status == 'completed' %}
+                                            <span class="text-success">Completada</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No hay reservas registradas en el sistema.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

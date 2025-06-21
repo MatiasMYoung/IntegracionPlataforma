@@ -1,0 +1,82 @@
+/* Estilos generales */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f5f7fa;
+    color: #15305B;
+}
+
+main {
+    flex: 1;
+}
+
+/* Estilos del footer */
+.footer {
+    margin-top: auto;
+    background: #15305B;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* Estilos de las tarjetas */
+.card {
+    transition: transform 0.2s;
+    margin-bottom: 1rem;
+    border: 1px solid #15305B;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 16px rgba(21,48,91,0.15);
+    border-color: #E30613;
+}
+
+/* Estilos del jumbotron */
+.jumbotron {
+    padding: 2rem;
+    background-color: #15305B;
+    color: #fff;
+    border-radius: 0.3rem;
+    margin-bottom: 2rem;
+}
+
+/* Estilos de navegación */
+.navbar {
+    margin-bottom: 1rem;
+    background: #15305B;
+    color: #fff;
+    border-bottom: 3px solid #E30613;
+}
+.navbar a, .navbar-brand {
+    color: #fff !important;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+.navbar a:hover, .navbar-brand:hover {
+    color: #E30613 !important;
+}
+
+/* Botones principales */
+.btn-primary, .btn-main {
+    background: #E30613;
+    color: #fff;
+    border: none;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+.btn-primary:hover, .btn-main:hover {
+    background: #b8000f;
+    color: #fff;
+}
+
+/* Estilos de alertas */
+.alert {
+    margin-bottom: 1rem;
+    border-left: 5px solid #E30613;
+} 

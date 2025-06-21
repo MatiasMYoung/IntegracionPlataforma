@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<!-- Carrusel de Vehículos -->
+<div id="vehicleCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        {% for vehicle in vehicles %}
+        <button type="button" data-bs-target="#vehicleCarousel" data-bs-slide-to="{{ loop.index0 }}" 
+                {% if loop.first %}class="active"{% endif %}></button>
+        {% endfor %}
+    </div>
+    
+    <div class="carousel-inner">
+        {% for vehicle in vehicles %}
+        <div class="carousel-item {% if loop.first %}active{% endif %}">
+            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-3">
+                <h3>{{ vehicle.name }} {{ vehicle.model }}</h3>
+                <p>Año: {{ vehicle.year }} | Eficiencia: {{ vehicle.fuel_efficiency }} km/l | Precio: ${{ vehicle.price_per_day }}/día</p>
+                <p>{{ vehicle.description }}</p>
+            </div>
+            <img src="{{ url_for('static', filename='img/' ~ vehicle.image_url) }}" 
+                 class="d-block w-100" alt="{{ vehicle.name }}" style="height: 400px; object-fit: cover;">
+        </div>
+        {% endfor %}
+    </div>
+    
+    <button class="carousel-control-prev" type="button" data-bs-target="#vehicleCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+        <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#vehicleCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+        <span class="visually-hidden">Siguiente</span>
+    </button>
+</div>
+
+<!-- Secciones Destacadas -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Vehículos Disponibles</h5>
+                <p class="card-text">Explora nuestra amplia gama de vehículos para renta. Desde autos compactos hasta camionetas de carga.</p>
+                <a href="{{ url_for('main.vehiculos') }}" class="btn btn-primary">Ver Vehículos</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Maquinaria Pesada</h5>
+                <p class="card-text">Contamos con maquinaria especializada para tus proyectos de construcción y obras.</p>
+                <a href="{{ url_for('main.maquinaria') }}" class="btn btn-primary">Ver Maquinaria</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Características -->
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-car fa-3x mb-3 text-primary"></i>
+                <h5 class="card-title">Amplia Flota</h5>
+                <p class="card-text">Gran variedad de vehículos y maquinaria para todas tus necesidades.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-tools fa-3x mb-3 text-primary"></i>
+                <h5 class="card-title">Mantenimiento Garantizado</h5>
+                <p class="card-text">Todos nuestros vehículos y maquinaria reciben mantenimiento regular.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-headset fa-3x mb-3 text-primary"></i>
+                <h5 class="card-title">Soporte 24/7</h5>
+                <p class="card-text">Atención y soporte técnico disponible las 24 horas.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %} 

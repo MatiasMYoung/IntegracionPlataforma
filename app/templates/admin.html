@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Panel de Administración{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2><i class="fas fa-cogs"></i> Panel de Administración</h2>
+            <p class="text-muted">Bienvenido al panel de administración. Desde aquí puedes gestionar todos los aspectos del sistema.</p>
+            
+            <div class="row mt-4">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                            <h5 class="card-title">Gestión de Usuarios</h5>
+                            <p class="card-text">Administra usuarios, roles y permisos del sistema.</p>
+                            <a href="{{ url_for('main.admin_usuarios') }}" class="btn btn-primary">
+                                <i class="fas fa-users"></i> Ver Usuarios
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-calendar-check fa-3x text-success mb-3"></i>
+                            <h5 class="card-title">Gestión de Reservas</h5>
+                            <p class="card-text">Visualiza y gestiona todas las reservas del sistema.</p>
+                            <a href="{{ url_for('main.admin_reservas') }}" class="btn btn-success">
+                                <i class="fas fa-calendar-check"></i> Ver Reservas
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-car fa-3x text-info mb-3"></i>
+                            <h5 class="card-title">Gestión de Vehículos</h5>
+                            <p class="card-text">Administra el inventario de vehículos y maquinaria.</p>
+                            <a href="{{ url_for('main.vehiculos') }}" class="btn btn-info">
+                                <i class="fas fa-car"></i> Ver Vehículos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <a href="{{ url_for('main.index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver al Inicio
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

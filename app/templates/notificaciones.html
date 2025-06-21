@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Mis Notificaciones{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-bell"></i> Mis Notificaciones</h2>
+                <div>
+                    {% if notificaciones %}
+                        <a href="{{ url_for('main.marcar_todas_leidas') }}" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-check-double"></i> Marcar todas como leídas
+                        </a>
+                    {% endif %}
+                    <a href="{{ url_for('main.index') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </a>
+                </div>
+            </div>
+
+            {% if notificaciones %}
+                <div class="row">
+                    {% for notificacion in notificaciones %}
+                    <div class="col-12 mb-3">
+                        <div class="card {% if not notificacion.read %}border-primary{% endif %}">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <div>
+                                    {% if notificacion.type == 'warning' %}
+                                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                                    {% elif notificacion.type == 'error' %}
+                                        <i class="fas fa-times-circle text-danger"></i>
+                                    {% elif notificacion.type == 'success' %}
+                                        <i class="fas fa-check-circle text-success"></i>
+                                    {% else %}
+                                        <i class="fas fa-info-circle text-info"></i>
+                                    {% endif %}
+                                    <strong>{{ notificacion.title }}</strong>
+                                    {% if not notificacion.read %}
+                                        <span class="badge bg-primary ms-2">Nueva</span>
+                                    {% endif %}
+                                </div>
+                                <div class="text-muted">
+                                    <small>{{ notificacion.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                    {% if not notificacion.read %}
+                                        <a href="{{ url_for('main.marcar_notificacion_leida', notification_id=notificacion.id) }}" 
+                                           class="btn btn-sm btn-outline-primary ms-2">
+                                            <i class="fas fa-check"></i> Marcar como leída
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">{{ notificacion.message | nl2br }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-bell-slash fa-3x mb-3"></i>
+                    <h5>No tienes notificaciones</h5>
+                    <p class="mb-0">Cuando recibas notificaciones importantes, aparecerán aquí.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 
